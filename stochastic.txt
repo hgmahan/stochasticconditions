@@ -1,0 +1,20 @@
+//@version=4
+study(title="Stochastic Jm2litty", shorttitle="Stoch J", format=format.price, precision=2,overlay=true, resolution="")
+periodK = input(14, title="K", minval=1)
+periodD = input(3, title="D", minval=1)
+smoothK = input(5, title="Smooth", minval=1)
+k = sma(stoch(close, high, low, periodK), smoothK)
+d = sma(k, periodD)
+smas= input(close,title="Alertcondition Moving Average Source",type=input.source)
+smal= input(defval=50,title="Alertconditon Moving Average Period",type=input.integer)
+smai = sma(smas,smal)
+smapaB= smai > close
+smapaA= smai < close
+hl= input(defval=80,title="Upper Band Stochastic",type=input.integer)
+ll= input(defval=20,title="Lower Band Stochastic",type=input.integer)
+OB = k>hl and d>hl
+OS = k<ll and d<ll
+plotshape(smapaB and OB, title="Buy Alert",style=shape.arrowup,location=location.belowbar,color=color.green,size=size.normal)
+plotshape(smapaA and OS, title="Sell Alert",style=shape.arrowdown,location=location.abovebar,color=color.red,size=size.normal)
+alertcondition(smapaB and OB ,title="Buy Alert")
+alertcondition(smapaA and OS,title="Sell Alert")
